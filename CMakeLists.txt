@@ -38,7 +38,7 @@
 # (From Daniel Stenberg) The cmake build selected to run gcc with -fPIC on my box while the plain configure script did not.
 # (From Daniel Stenberg) The gcc command line use neither -g nor any -O options. As a developer, I also treasure our configure scripts's --enable-debug option that sets a long range of "picky" compiler options.
 cmake_minimum_required(VERSION 3.2...3.16 FATAL_ERROR)
-
+add_subdirectory(mbedtls2_x)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 include(Utilities)
 include(Macros)
@@ -375,12 +375,12 @@ if(WIN32)
   cmake_dependent_option(CURL_WINDOWS_SSPI "Use windows libraries to allow NTLM authentication without openssl" ON
     CURL_USE_SCHANNEL OFF)
 endif()
-cmake_dependent_option(CURL_USE_MBEDTLS "Enable mbedTLS for SSL/TLS" OFF CURL_ENABLE_SSL OFF)
+cmake_dependent_option(CURL_USE_MBEDTLS "Enable mbedTLS for SSL/TLS" ON CURL_ENABLE_SSL ON)
 cmake_dependent_option(CURL_USE_BEARSSL "Enable BearSSL for SSL/TLS" OFF CURL_ENABLE_SSL OFF)
 cmake_dependent_option(CURL_USE_NSS "Enable NSS for SSL/TLS" OFF CURL_ENABLE_SSL OFF)
 cmake_dependent_option(CURL_USE_WOLFSSL "enable wolfSSL for SSL/TLS" OFF CURL_ENABLE_SSL OFF)
 
-set(openssl_default ON)
+set(openssl_default OFF)
 if(WIN32 OR CURL_USE_SECTRANSP OR CURL_USE_SCHANNEL OR CURL_USE_MBEDTLS OR CURL_USE_NSS OR CURL_USE_WOLFSSL)
   set(openssl_default OFF)
 endif()
@@ -463,7 +463,7 @@ if(CURL_USE_OPENSSL)
 endif()
 
 if(CURL_USE_MBEDTLS)
-  find_package(MbedTLS REQUIRED)
+  #find_package(MbedTLS REQUIRED)
   set(SSL_ENABLED ON)
   set(USE_MBEDTLS ON)
   list(APPEND CURL_LIBS ${MBEDTLS_LIBRARIES})
@@ -1320,7 +1320,7 @@ if(CURL_WERROR)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")
   else()
     # this assumes clang or gcc style options
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
+    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
   endif()
 endif()
 

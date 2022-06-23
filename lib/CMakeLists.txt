@@ -66,9 +66,8 @@ endif()
 # )
 # ENDIF(NOT HAVE_STRTOLL AND NOT HAVE__STRTOI64)
 
-
 # The rest of the build
-
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../mbedtls2_x/include)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/../include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
@@ -93,7 +92,12 @@ if(NOT BUILD_SHARED_LIBS)
     set_target_properties(${LIB_NAME} PROPERTIES INTERFACE_COMPILE_DEFINITIONS CURL_STATICLIB)
 endif()
 
-target_link_libraries(${LIB_NAME} ${CURL_LIBS})
+target_link_libraries(${LIB_NAME}
+   ${CMAKE_CURRENT_BINARY_DIR}/../mbedtls2_x/library/libmbedcrypto.so
+   ${CMAKE_CURRENT_BINARY_DIR}/../mbedtls2_x/library/libmbedx509.so
+   ${CMAKE_CURRENT_BINARY_DIR}/../mbedtls2_x/library/libmbedtls.so
+   ${CURL_LIBS}
+   )
 
 set_target_properties(${LIB_NAME} PROPERTIES
   COMPILE_DEFINITIONS BUILDING_LIBCURL
